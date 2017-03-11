@@ -7,6 +7,11 @@
     records = @state.records.slice()
     records.push record
     @setState records: records
+  updateRecord: (record, data) ->
+    records = @state.records.slice()
+    index = records.indexOf record
+    records.splice index, 1, data
+    @replaceState records: records
   deleteRecord: (record) ->
     records = @state.records.slice()
     index = records.indexOf record
@@ -40,4 +45,4 @@
             React.DOM.th null, 'Actions'
         React.DOM.tbody null,
           for record in @state.records
-            React.createElement Record, key: record.id, record: record, handleDeleteRecord: @deleteRecord
+            React.createElement Record, key: record.id, record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord

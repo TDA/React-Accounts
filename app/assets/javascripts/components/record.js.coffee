@@ -4,14 +4,21 @@
   handleToggle: (e) ->
     e.preventDefault()
     @setState edit: !@state.edit
-  handleEdit: (e) ->
+  handleUpdate: (e) ->
     e.preventDefault()
+    record =
+      title: this.refs.title.value
+      date: this.refs.date.value
+      amount: this.refs.amount.value
     $.ajax
       method: 'PUT'
-      url: "/records/#{ @refs.record.id }"
+      url: "/records/#{ @props.record.id }"
       dataType: 'JSON'
-      success: () =>
-        @props.handleDeleteRecord @props.record
+      data:
+        record: record
+      success: (data) =>
+        @setState edit: false
+        @props.handleEditRecord @props.record, data
   handleDelete: (e) ->
     e.preventDefault()
     $.ajax
@@ -36,7 +43,7 @@
       className: 'div'
       React.DOM.a
         className: 'btn btn-default'
-        onClick: @handleEdit
+        onClick: @handleUpdate
         'Update'
       React.DOM.a
         className: 'btn btn-danger'
@@ -66,7 +73,7 @@
         React.DOM.input
           className: 'form-control'
           type: 'text'
-          defaultValue: amountFormat(@props.record.amount)
+          defaultValue: @props.record.amount
           ref: 'amount'
       React.DOM.td null, @updateActions()
   render: () ->
