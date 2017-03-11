@@ -4,6 +4,14 @@
   handleToggle: (e) ->
     e.preventDefault()
     @setState edit: !@state.edit
+  handleEdit: (e) ->
+    e.preventDefault()
+    $.ajax
+      method: 'PUT'
+      url: "/records/#{ @refs.record.id }"
+      dataType: 'JSON'
+      success: () =>
+        @props.handleDeleteRecord @props.record
   handleDelete: (e) ->
     e.preventDefault()
     $.ajax
@@ -23,6 +31,17 @@
         className: 'btn btn-info'
         onClick: @handleToggle
         'Edit'
+  updateActions: () ->
+    React.DOM.div
+      className: 'div'
+      React.DOM.a
+        className: 'btn btn-default'
+        onClick: @handleEdit
+        'Update'
+      React.DOM.a
+        className: 'btn btn-danger'
+        onClick: @handleToggle
+        'Cancel'
   recordReadOnly: () ->
     React.DOM.tr null,
       React.DOM.td null, @props.record.date
@@ -49,7 +68,7 @@
           type: 'text'
           defaultValue: amountFormat(@props.record.amount)
           ref: 'amount'
-      React.DOM.td null, @actions()
+      React.DOM.td null, @updateActions()
   render: () ->
     if @state.edit
       @recordInputField()
